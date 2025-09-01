@@ -1,0 +1,8 @@
+title: "Complete Example"
+description: "This example demonstrates a comprehensive setup using Terraform to configure AWS Batch jobs with various parameters and policies."
+main_purpose: "The main purpose is to configure and manage AWS Batch jobs with different parameters, IAM policies, and environment variables."
+key_features:
+  - "**Batch Job Configuration**: Defines multiple batch jobs with different commands, images, memory, and vCPU settings."
+  - "**Iam Policies**: Includes IAM role policies and statements for tasks and task execution."
+  - "**Environment Variables And Secrets**: Maps environment variables and secrets for each batch job."
+  - "**Retry Strategy**: Implements a retry strategy for handling job failures."
