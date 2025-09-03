@@ -18,10 +18,10 @@ module "wrapper_batch_job" {
       command = ["ls", "-la"]
       # memory                   = "2048"
       # vcpu                     = "1"
-      #cloudwatch_log_group_retention_in_days = 14
-      #assignPublicIp = "ENABLED" # subnet public
+      # cloudwatch_log_group_retention_in_days = 14
+      # assignPublicIp = "ENABLED" # subnet public
 
-      # Policies que usan la tasks desde el codigo desarrollado
+      # Policies used by the tasks from the developed code
       tasks_iam_role_policies = {
         ReadOnlyAccess = "arn:aws:iam::aws:policy/ReadOnlyAccess"
       }
@@ -32,7 +32,7 @@ module "wrapper_batch_job" {
         }
       ]
 
-      # Policies que usa el servicio para poder iniciar tasks (ecr / ssm / etc)
+      # Policies used by the service to be able to start tasks (ecr / ssm / etc)
       task_exec_iam_role_policies = {}
       task_exec_iam_statements    = {}
 
@@ -51,9 +51,9 @@ module "wrapper_batch_job" {
       image   = "public.ecr.aws/runecast/busybox:1.33.1"
       # memory                   = "2048"
       # vcpu                     = "1"
-      #cloudwatch_log_group_retention_in_days = 14
+      # cloudwatch_log_group_retention_in_days = 14
 
-      # Policies que usan la tasks desde el codigo desarrollado
+      # Policies used by the tasks from the developed code
       tasks_iam_role_policies = {
         ReadOnlyAccess = "arn:aws:iam::aws:policy/ReadOnlyAccess"
       }
@@ -64,7 +64,7 @@ module "wrapper_batch_job" {
         }
       ]
 
-      # Policies que usa el servicio para poder iniciar tasks (ecr / ssm / etc)
+      # Policies used by the service to be able to start tasks (ecr / ssm / etc)
       task_exec_iam_role_policies = {}
       task_exec_iam_statements    = {}
 
@@ -85,7 +85,7 @@ module "wrapper_batch_job" {
       vcpu                                   = "1"
       cloudwatch_log_group_retention_in_days = 14
 
-      #Policies que usan la tasks desde el codigo desarrollado
+      # Policies used by the tasks from the developed code
       tasks_iam_role_policies = {
         ReadOnlyAccess = "arn:aws:iam::aws:policy/ReadOnlyAccess"
       }
@@ -96,7 +96,7 @@ module "wrapper_batch_job" {
         }
       ]
 
-      #Policies que usa el servicio para poder iniciar tasks (ecr / ssm / etc)
+      # Policies used by the service to be able to start tasks (ecr / ssm / etc)
       task_exec_iam_role_policies = {}
       task_exec_iam_statements    = {}
 
