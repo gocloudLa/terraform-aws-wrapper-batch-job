@@ -10,6 +10,10 @@ The AWS Batch_job Terraform Wrapper defines the configuration of the container p
 
 ### ✨ Features
 
+- 📦 [Public ECR Container](#public-ecr-container) - Run containers from public ECR images with custom environment and secrets
+
+- 🔁 [Retry Strategy](#retry-strategy) - Configure retries and exit evaluation for container tasks
+
 
 
 ### 🔗 External Modules
@@ -58,6 +62,113 @@ The AWS Batch_job Terraform Wrapper defines the configuration of the container p
 
 
 ## 🔧 Additional Features Usage
+
+### Public ECR Container
+This example shows how to run a container from a **public ECR image**.<br/>
+It defines environment variables, secrets, and attaches IAM policies for the task role.<br/>
+Useful for quick testing or running tools like BusyBox without a private registry.
+
+
+<details><summary>Configuration Code</summary>
+
+```hcl
+ecs_service_parameters = {
+  ExPublicEcr = {
+    command = ["ls", "-la"]
+    image   = "public.ecr.aws/runecast/busybox:1.33.1"
+    # memory                   = "2048"
+    # vcpu                     = "1"
+    # cloudwatch_log_group_retention_in_days = 14
+
+    tasks_iam_role_policies = {
+      ReadOnlyAccess = "arn:aws:iam::aws:policy/ReadOnlyAccess"
+    }
+    tasks_iam_role_statements = [
+      {
+        actions   = ["s3:List*"]
+        resources = ["arn:aws:s3:::*"]
+      }
+    ]
+
+    task_exec_iam_role_policies = {}
+    task_exec_iam_statements    = {}
+
+    map_environment = {
+      "ENV_1" = "env_value_1"
+      "ENV_2" = "env_value_2"
+    }
+    map_secrets = {
+      "SECRET_ENV_1" = "secret_env_value_1"
+      "SECRET_ENV_2" = "secret_env_value_2"
+    }
+  }
+}
+```
+
+
+</details>
+
+
+### Retry Strategy
+This example shows how to configure a container with **retry strategies**.<br/>
+It specifies memory/CPU, CloudWatch logs retention, environment variables, and IAM policies.<br/>
+Additionally, it defines `attempt_duration_seconds` and a `retry_strategy` with exit code evaluation.
+
+
+<details><summary>Configuration Code</summary>
+
+```hcl
+ecs_service_parameters = {
+  ExRetry = {
+    command = ["ls", "-la"]
+    # image   = "public.ecr.aws/runecast/busybox:1.33.1"
+    memory                                 = "2048"
+    vcpu                                   = "1"
+    cloudwatch_log_group_retention_in_days = 14
+
+    tasks_iam_role_policies = {
+      ReadOnlyAccess = "arn:aws:iam::aws:policy/ReadOnlyAccess"
+    }
+    tasks_iam_role_statements = [
+      {
+        actions   = ["s3:List*"]
+        resources = ["arn:aws:s3:::*"]
+      }
+    ]
+
+    task_exec_iam_role_policies = {}
+    task_exec_iam_role_statements = {}
+
+    map_environment = {
+      "ENV_1" = "env_value_1"
+      "ENV_2" = "env_value_2"
+    }
+    map_secrets = {
+      "SECRET_ENV_1" = "secret_env_value_1"
+      "SECRET_ENV_2" = "secret_env_value_2"
+    }
+
+    attempt_duration_seconds = 60
+    retry_strategy = {
+      attempts = 3
+      evaluate_on_exit = {
+        retry_error = {
+          action       = "RETRY"
+          on_exit_code = 1
+        }
+        exit_success = {
+          action       = "EXIT"
+          on_exit_code = 0
+        }
+      }
+    }
+  }
+}
+```
+
+
+</details>
+
 
 
 
