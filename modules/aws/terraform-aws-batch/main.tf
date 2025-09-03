@@ -4,15 +4,15 @@ resource "aws_batch_job_definition" "this" {
 
   platform_capabilities = ["FARGATE"]
   container_properties = jsonencode({
-    command     = var.command
-    environment = var.environment
+    command                      = var.command
+    environment                  = var.environment
     executionRoleArn             = aws_iam_role.task_exec.arn
     fargatePlatformConfiguration = var.fargate_platform_configuration
     image                        = var.image
-    jobRoleArn       = aws_iam_role.tasks.arn
-    linuxParameters  = var.linux_parameters
-    logConfiguration = var.log_configuration
-    mountPoints      = var.mount_points
+    jobRoleArn                   = aws_iam_role.tasks.arn
+    linuxParameters              = var.linux_parameters
+    logConfiguration             = var.log_configuration
+    mountPoints                  = var.mount_points
     networkConfiguration = {
       "assignPublicIp" = var.assignPublicIp
     }
