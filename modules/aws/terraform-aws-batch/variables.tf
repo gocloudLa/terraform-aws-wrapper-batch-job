@@ -35,12 +35,6 @@ variable "environment" {
   default = []
 }
 
-# variable "ephemeral_storage" {
-#   description = ""
-#   type        = map(string)
-#   default     = {}
-# }
-
 variable "fargate_platform_configuration" {
   description = ""
   type        = map(string)
@@ -52,12 +46,6 @@ variable "image" {
   type        = string
   default     = null
 }
-
-# variable "instance_type" {
-#   description = ""
-#   type = string
-#   default = ""
-# }
 
 variable "job_role_arn" {
   description = ""
@@ -113,12 +101,6 @@ variable "readonly_root_filesystem" {
   type        = bool
   default     = true
 }
-
-# variable "repository_credentials" {
-#   description = "Container repository credentials; required when using a private repo.  This map currently supports a single key; \"credentialsParameter\", which should be the ARN of a Secrets Manager's secret holding the credentials"
-#   type        = map(string)
-#   default     = {}
-# }
 
 variable "resource_requirements" {
   description = "The type and amount of a resource to assign to a container. The only supported resource is a GPU"

@@ -6,11 +6,9 @@ resource "aws_batch_job_definition" "this" {
   container_properties = jsonencode({
     command     = var.command
     environment = var.environment
-    #ephemeralStorage = var.ephemeral_storage  #### ERROR
     executionRoleArn             = aws_iam_role.task_exec.arn
     fargatePlatformConfiguration = var.fargate_platform_configuration
     image                        = var.image
-    # instanceType  = var.instance_type #### NO ES APLICABLE CON FARGATE
     jobRoleArn       = aws_iam_role.tasks.arn
     linuxParameters  = var.linux_parameters
     logConfiguration = var.log_configuration
@@ -20,7 +18,6 @@ resource "aws_batch_job_definition" "this" {
     }
     privileged             = var.privileged
     readonlyRootFilesystem = var.readonly_root_filesystem
-    # repositoryCredentials = var.repository_credentials ### ERROR
     resourceRequirements = [
       {
         type  = "VCPU",
