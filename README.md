@@ -210,7 +210,7 @@ ecs_service_parameters = {
 | tasks_iam_role_statements               | IAM statements for the task role                                             | `list`         | `{}`                                                                       | no       |
 | tasks_iam_role_tags                     | Tags of the IAM role for the tasks                                           | `map`          | `{}`                                                                       | no       |
 | tasks_iam_role_use_name_prefix          | Indicates whether a prefix should be used for the IAM role name              | `bool`         | `true`                                                                     | no       |
-| tags                                    | Tags that are added to all resources                                         | `map(string)`  | `{}`                                                                       | no       |
+| tags                                    | A map of tags to assign to resources.                                        | `map`          | `{}`                                                                       | no       |
 
 
 
