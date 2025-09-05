@@ -41,5 +41,5 @@ module "batch_job" {
   tasks_iam_role_use_name_prefix          = try(each.value.tasks_iam_role_use_name_prefix, var.batch_job_defaults.tasks_iam_role_use_name_prefix, true)
 
 
-  tags = merge(local.common_tags, { workload = "${each.key}" })
+  tags = merge(local.common_tags, { workload = "${each.key}" }, try(each.value.tags, var.batch_job_defaults.tags, null))
 }
