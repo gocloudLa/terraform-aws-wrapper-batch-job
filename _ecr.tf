@@ -12,7 +12,7 @@ locals {
 
 module "ecr" {
   source   = "terraform-aws-modules/ecr/aws"
-  version  = "2.4.0"
+  version  = "3.0.1"
   for_each = local.create_ecr_repository
 
   repository_name         = lower(each.value.repository_name)
