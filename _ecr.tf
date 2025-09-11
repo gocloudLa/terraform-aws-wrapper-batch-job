@@ -2,9 +2,11 @@ locals {
   create_ecr_repository = {
     for job_key, job in var.batch_job_parameters :
     job_key => {
-      "repository_name"                 = try(job.repository_name, "${local.common_name}-batch-${job_key}")
-      "repository_lifecycle_policy"     = try(job.repository_lifecycle_policy, null)
-      "repository_image_tag_mutability" = try(job.repository_image_tag_mutability, "MUTABLE")
+      "repository_name"                                  = try(job.repository_name, "${local.common_name}-batch-${job_key}")
+      "repository_lifecycle_policy"                      = try(job.repository_lifecycle_policy, null)
+      "repository_image_tag_mutability"                  = try(job.repository_image_tag_mutability, "MUTABLE")
+      "repository_image_tag_mutability_exclusion_filter" = try(job.repository_image_tag_mutability_exclusion_filter, null)
+
     }
     if length(try(job.image, "")) == 0
   }
@@ -12,7 +14,7 @@ locals {
 
 module "ecr" {
   source   = "terraform-aws-modules/ecr/aws"
-  version  = "2.4.0"
+  version  = "3.0.1"
   for_each = local.create_ecr_repository
 
   repository_name         = lower(each.value.repository_name)
@@ -34,9 +36,10 @@ module "ecr" {
     ]
   })
 
-  repository_image_tag_mutability = each.value.repository_image_tag_mutability
-  repository_force_delete         = true
-  tags                            = local.common_tags
+  repository_image_tag_mutability                  = each.value.repository_image_tag_mutability
+  repository_image_tag_mutability_exclusion_filter = each.value.repository_image_tag_mutability_exclusion_filter
+  repository_force_delete                          = true
+  tags                                             = local.common_tags
 }
 
 output "ecr" {
