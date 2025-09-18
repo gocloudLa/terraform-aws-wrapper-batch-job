@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/gocloudLa/terraform-aws-wrapper-batch-job/compare/v1.0.0...v1.0.1) (2025-09-18)
+
+
+### Bug Fixes
+
+* **terraform:** external modules upgrade 20250910 ([5a614fa](https://github.com/gocloudLa/terraform-aws-wrapper-batch-job/commit/5a614fa79d71175a935e2e3126d69da159b439e0))
+
 ## 1.0.0 (2025-09-05)
 
 
