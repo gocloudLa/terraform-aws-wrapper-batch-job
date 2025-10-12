@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/gocloudLa/terraform-aws-wrapper-batch-job/compare/v1.0.1...v1.0.2) (2025-10-12)
+
+
+### Bug Fixes
+
+* **deps:** bump terraform-aws-modules/ecr/aws from 3.0.1 to 3.1.0 in the all-terraform-dependencies group across 1 directory ([#5](https://github.com/gocloudLa/terraform-aws-wrapper-batch-job/issues/5)) ([5cc1d6e](https://github.com/gocloudLa/terraform-aws-wrapper-batch-job/commit/5cc1d6e2cdf842f58e3b50aa78234f8a2f2dd1e9))
+
 ## [1.0.1](https://github.com/gocloudLa/terraform-aws-wrapper-batch-job/compare/v1.0.0...v1.0.1) (2025-09-18)
 
 
