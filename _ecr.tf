@@ -2,11 +2,18 @@ locals {
   create_ecr_repository = {
     for job_key, job in var.batch_job_parameters :
     job_key => {
+      "job_key"                                          = job_key
       "repository_name"                                  = try(job.repository_name, "${local.common_name}-batch-${job_key}")
       "repository_lifecycle_policy"                      = try(job.repository_lifecycle_policy, null)
       "repository_image_tag_mutability"                  = try(job.repository_image_tag_mutability, "MUTABLE")
       "repository_image_tag_mutability_exclusion_filter" = try(job.repository_image_tag_mutability_exclusion_filter, null)
-
+      # Registry Scanning Configuration
+      "manage_registry_scanning_configuration" = try(job.manage_registry_scanning_configuration, false)
+      "registry_scan_type"                     = try(job.registry_scan_type, "ENHANCED")
+      "registry_scan_rules"                    = try(job.registry_scan_rules, null)
+      # Registry Replication Configuration
+      "create_registry_replication_configuration" = try(job.create_registry_replication_configuration, false)
+      "registry_replication_rules"                = try(job.registry_replication_rules, null)
     }
     if length(try(job.image, "")) == 0
   }
@@ -39,7 +46,17 @@ module "ecr" {
   repository_image_tag_mutability                  = each.value.repository_image_tag_mutability
   repository_image_tag_mutability_exclusion_filter = each.value.repository_image_tag_mutability_exclusion_filter
   repository_force_delete                          = true
-  tags                                             = local.common_tags
+
+  # Registry Scanning Configuration
+  manage_registry_scanning_configuration = each.value.manage_registry_scanning_configuration
+  registry_scan_type                     = each.value.registry_scan_type
+  registry_scan_rules                    = each.value.registry_scan_rules
+
+  # Registry Replication Configuration
+  create_registry_replication_configuration = each.value.create_registry_replication_configuration
+  registry_replication_rules                = each.value.registry_replication_rules
+
+  tags = local.common_tags
 }
 
 output "ecr" {
