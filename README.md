@@ -14,6 +14,8 @@ The AWS Batch_job Terraform Wrapper defines the configuration of the container p
 
 - 🔁 [Retry Strategy](#retry-strategy) - Configure retries and exit evaluation for container tasks
 
+- 🔍 [ECR Registry Scanning & Replication](#ecr-registry-scanning-&-replication) - Advanced ECR registry scanning and cross-region replication capabilities
+
 
 
 ### 🔗 External Modules
@@ -170,47 +172,167 @@ ecs_service_parameters = {
 </details>
 
 
+### ECR Registry Scanning & Replication
+Provides comprehensive ECR registry management with advanced scanning and replication features for batch jobs.<br/><br/>
+
+**Registry Scanning Configuration:**
+- Enhanced or Basic scanning types with configurable rules
+- Support for SCAN_ON_PUSH and CONTINUOUS_SCAN frequencies
+- Wildcard and prefix-based filtering for targeted scanning
+
+**Registry Replication Configuration:**
+- Cross-region image replication for disaster recovery and performance
+- Configurable destination regions and registry IDs
+- Repository filtering for selective replication
+
+**Image Tag Mutability:**
+- Configurable tag mutability settings (MUTABLE, IMMUTABLE, etc.)
+- Exclusion filters for specific tag patterns
+- Support for wildcard-based tag filtering
+
+
+<details><summary>Configuration Code</summary>
+
+```hcl
+batch_job_parameters = {
+  ExEcrAdvanced = {
+    command = ["echo", "ECR Advanced Configuration"]
+    
+    # Registry Scanning Configuration
+    manage_registry_scanning_configuration = true
+    registry_scan_type                     = "ENHANCED"
+    registry_scan_rules = [
+      {
+        scan_frequency = "SCAN_ON_PUSH"
+        filter = [
+          {
+            filter      = "prod-*"
+            filter_type = "WILDCARD"
+          },
+          {
+            filter      = "release-*"
+            filter_type = "WILDCARD"
+          }
+        ]
+      },
+      {
+        scan_frequency = "CONTINUOUS_SCAN"
+        filter = [
+          {
+            filter      = "latest"
+            filter_type = "WILDCARD"
+          }
+        ]
+      }
+    ]
+
+    # Registry Replication Configuration
+    create_registry_replication_configuration = true
+    registry_replication_rules = [
+      {
+        destinations = [
+          {
+            region      = "us-west-2"
+            registry_id = "012345678901"
+          },
+          {
+            region      = "eu-west-1"
+            registry_id = "012345678901"
+          }
+        ]
+        repository_filters = [
+          {
+            filter      = "prod-batch-job"
+            filter_type = "PREFIX_MATCH"
+          }
+        ]
+      }
+    ]
+
+    # Image Tag Mutability
+    repository_image_tag_mutability = "MUTABLE_WITH_EXCLUSION"
+    repository_image_tag_mutability_exclusion_filter = [
+      {
+        filter      = "latest*"
+        filter_type = "WILDCARD"
+      },
+      {
+        filter      = "dev-*"
+        filter_type = "WILDCARD"
+      },
+      {
+        filter      = "qa-*"
+        filter_type = "WILDCARD"
+      }
+    ]
+
+    tasks_iam_role_policies = {}
+    tasks_iam_role_statements = []
+    task_exec_iam_role_policies = {}
+    task_exec_iam_statements = {}
+
+    map_environment = {}
+    map_secrets = {}
+  }
+}
+```
+
+
+</details>
+
+
 
 
 ## 📑 Inputs
-| Name                                    | Description                                                                  | Type           | Default                                                                    | Required |
-| --------------------------------------- | ---------------------------------------------------------------------------- | -------------- | -------------------------------------------------------------------------- | -------- |
-| name                                    | Job name                                                                     | `string`       | `${local.common_name}-${each.key}`                                         | no       |
-| command                                 | List of commands that run when the container starts                          | `list(string)` | `[]`                                                                       | no       |
-| environment                             | List of environment variables to be passed to the container during execution | `list(object)` | `""`                                                                       | no       |
-| image                                   | URI of the container image to be used for running the task                   | `string`       | `""`                                                                       | no       |
-| log_configuration                       | Configuration for container log registration                                 | `any`          | `{}`                                                                       | no       |
-| memory                                  | Amount of memory to be assigned to the container during execution            | `string`       | `"2048"`                                                                   | no       |
-| mount_points                            | List of mount points for volumes in the container                            | `list(any)`    | `{}`                                                                       | no       |
-| vcpu                                    | Number of vCPUs assigned to the container                                    | `string`       | `"1"`                                                                      | no       |
-| readonly_root_filesystem                | Determines if the container's root file system should be read-only           | `bool`         | `false`                                                                    | no       |
-| fargate_platform_configuration          | AWS Fargate platform configuration                                           | `map(string)`  | `{ platformVersion = "LATEST" }`                                           | no       |
-| secrets                                 | List of secrets linked to the job                                            | `map(string)`  | `{}`                                                                       | no       |
-| task_definition_arn                     | ARN of the task definition associated with the ECS service                   | `string`       | `null`                                                                     | no       |
-| task_definition_placement_constraints   | Placement constraints for the task definition                                | `map`          | `{}`                                                                       | no       |
-| task_exec_iam_role_arn                  | ARN of the IAM role for task execution                                       | `string`       | `null`                                                                     | no       |
-| task_exec_iam_role_description          | Description of the IAM role for task execution                               | `string`       | `null`                                                                     | no       |
-| task_exec_iam_role_max_session_duration | Maximum session duration for the IAM task execution role                     | `number`       | `null`                                                                     | no       |
-| task_exec_iam_role_name                 | Name of the IAM role for task execution                                      | `string`       | `null`                                                                     | no       |
-| task_exec_iam_role_path                 | Path of the IAM role for task execution                                      | `string`       | `null`                                                                     | no       |
-| task_exec_iam_role_permissions_boundary | Permission limit of the IAM role for task execution                          | `string`       | `null`                                                                     | no       |
-| task_exec_iam_role_policies             | Policies of the IAM role for task execution                                  | `list`         | `{}`                                                                       | no       |
-| task_exec_iam_role_tags                 | Tags of the IAM role for task execution                                      | `map`          | `{}`                                                                       | no       |
-| task_exec_iam_role_use_name_prefix      | Indicates whether a prefix should be used for the IAM role name              | `bool`         | `true`                                                                     | no       |
-| task_exec_iam_statements                | IAM statements for the task execution role                                   | `list`         | `{}`                                                                       | no       |
-| task_exec_secret_arns                   | ARNs of the secrets for task execution                                       | `list`         | `["arn:aws:secretsmanager:*:*:secret:${local.common_name}-${each.key}-*"]` | no       |
-| task_exec_ssm_param_arns                | ARNs of the SSM parameters for task execution                                | `list`         | `["arn:aws:ssm:*:*:parameter/batch/${local.common_name}-${each.key}-*"]`   | no       |
-| task_tags                               | Tags for the tasks                                                           | `map`          | `{}`                                                                       | no       |
-| tasks_iam_role_arn                      | ARN of the IAM role for the tasks                                            | `string`       | `null`                                                                     | no       |
-| tasks_iam_role_description              | Description of the IAM role for the tasks                                    | `string`       | `null`                                                                     | no       |
-| tasks_iam_role_name                     | Name of the IAM role for the tasks                                           | `string`       | `null`                                                                     | no       |
-| tasks_iam_role_path                     | Path of the IAM role for the tasks                                           | `string`       | `null`                                                                     | no       |
-| tasks_iam_role_permissions_boundary     | Permission limit of the IAM role for the tasks                               | `string`       | `null`                                                                     | no       |
-| tasks_iam_role_policies                 | Policies of the IAM role for the tasks                                       | `list`         | `{}`                                                                       | no       |
-| tasks_iam_role_statements               | IAM statements for the task role                                             | `list`         | `{}`                                                                       | no       |
-| tasks_iam_role_tags                     | Tags of the IAM role for the tasks                                           | `map`          | `{}`                                                                       | no       |
-| tasks_iam_role_use_name_prefix          | Indicates whether a prefix should be used for the IAM role name              | `bool`         | `true`                                                                     | no       |
-| tags                                    | A map of tags to assign to resources.                                        | `map`          | `{}`                                                                       | no       |
+| Name                                             | Description                                                                                                                                | Type           | Default                                                                    | Required |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------- | -------------------------------------------------------------------------- | -------- |
+| name                                             | Job name                                                                                                                                   | `string`       | `${local.common_name}-${each.key}`                                         | no       |
+| command                                          | List of commands that run when the container starts                                                                                        | `list(string)` | `[]`                                                                       | no       |
+| environment                                      | List of environment variables to be passed to the container during execution                                                               | `list(object)` | `""`                                                                       | no       |
+| image                                            | URI of the container image to be used for running the task                                                                                 | `string`       | `""`                                                                       | no       |
+| log_configuration                                | Configuration for container log registration                                                                                               | `any`          | `{}`                                                                       | no       |
+| memory                                           | Amount of memory to be assigned to the container during execution                                                                          | `string`       | `"2048"`                                                                   | no       |
+| mount_points                                     | List of mount points for volumes in the container                                                                                          | `list(any)`    | `{}`                                                                       | no       |
+| vcpu                                             | Number of vCPUs assigned to the container                                                                                                  | `string`       | `"1"`                                                                      | no       |
+| readonly_root_filesystem                         | Determines if the container's root file system should be read-only                                                                         | `bool`         | `false`                                                                    | no       |
+| fargate_platform_configuration                   | AWS Fargate platform configuration                                                                                                         | `map(string)`  | `{ platformVersion = "LATEST" }`                                           | no       |
+| secrets                                          | List of secrets linked to the job                                                                                                          | `map(string)`  | `{}`                                                                       | no       |
+| task_definition_arn                              | ARN of the task definition associated with the ECS service                                                                                 | `string`       | `null`                                                                     | no       |
+| task_definition_placement_constraints            | Placement constraints for the task definition                                                                                              | `map`          | `{}`                                                                       | no       |
+| task_exec_iam_role_arn                           | ARN of the IAM role for task execution                                                                                                     | `string`       | `null`                                                                     | no       |
+| task_exec_iam_role_description                   | Description of the IAM role for task execution                                                                                             | `string`       | `null`                                                                     | no       |
+| task_exec_iam_role_max_session_duration          | Maximum session duration for the IAM task execution role                                                                                   | `number`       | `null`                                                                     | no       |
+| task_exec_iam_role_name                          | Name of the IAM role for task execution                                                                                                    | `string`       | `null`                                                                     | no       |
+| task_exec_iam_role_path                          | Path of the IAM role for task execution                                                                                                    | `string`       | `null`                                                                     | no       |
+| task_exec_iam_role_permissions_boundary          | Permission limit of the IAM role for task execution                                                                                        | `string`       | `null`                                                                     | no       |
+| task_exec_iam_role_policies                      | Policies of the IAM role for task execution                                                                                                | `list`         | `{}`                                                                       | no       |
+| task_exec_iam_role_tags                          | Tags of the IAM role for task execution                                                                                                    | `map`          | `{}`                                                                       | no       |
+| task_exec_iam_role_use_name_prefix               | Indicates whether a prefix should be used for the IAM role name                                                                            | `bool`         | `true`                                                                     | no       |
+| task_exec_iam_statements                         | IAM statements for the task execution role                                                                                                 | `list`         | `{}`                                                                       | no       |
+| task_exec_secret_arns                            | ARNs of the secrets for task execution                                                                                                     | `list`         | `["arn:aws:secretsmanager:*:*:secret:${local.common_name}-${each.key}-*"]` | no       |
+| task_exec_ssm_param_arns                         | ARNs of the SSM parameters for task execution                                                                                              | `list`         | `["arn:aws:ssm:*:*:parameter/batch/${local.common_name}-${each.key}-*"]`   | no       |
+| task_tags                                        | Tags for the tasks                                                                                                                         | `map`          | `{}`                                                                       | no       |
+| tasks_iam_role_arn                               | ARN of the IAM role for the tasks                                                                                                          | `string`       | `null`                                                                     | no       |
+| tasks_iam_role_description                       | Description of the IAM role for the tasks                                                                                                  | `string`       | `null`                                                                     | no       |
+| tasks_iam_role_name                              | Name of the IAM role for the tasks                                                                                                         | `string`       | `null`                                                                     | no       |
+| tasks_iam_role_path                              | Path of the IAM role for the tasks                                                                                                         | `string`       | `null`                                                                     | no       |
+| tasks_iam_role_permissions_boundary              | Permission limit of the IAM role for the tasks                                                                                             | `string`       | `null`                                                                     | no       |
+| tasks_iam_role_policies                          | Policies of the IAM role for the tasks                                                                                                     | `list`         | `{}`                                                                       | no       |
+| tasks_iam_role_statements                        | IAM statements for the task role                                                                                                           | `list`         | `{}`                                                                       | no       |
+| tasks_iam_role_tags                              | Tags of the IAM role for the tasks                                                                                                         | `map`          | `{}`                                                                       | no       |
+| tasks_iam_role_use_name_prefix                   | Indicates whether a prefix should be used for the IAM role name                                                                            | `bool`         | `true`                                                                     | no       |
+| repository_name                                  | The name of the ECR repository.                                                                                                            | `string`       | `"${local.common_name}-batch-${each.key}"`                                 | no       |
+| repository_lifecycle_policy                      | The policy document for ECR repository lifecycle.                                                                                          | `string`       | `null`                                                                     | no       |
+| repository_image_tag_mutability                  | The tag mutability setting for the repository.                                                                                             | `string`       | `"MUTABLE"`                                                                | no       |
+| repository_image_tag_mutability_exclusion_filter | Configuration block that defines filters to specify which image tags can override the default tag mutability setting.                      | `list`         | `null`                                                                     | no       |
+| repository_read_access_arns                      | The ARNs of the IAM users/roles that have read access to the repository.                                                                   | `list`         | `[]`                                                                       | no       |
+| repository_read_write_access_arns                | The ARNs of the IAM users/roles that have read/write access to the repository.                                                             | `list`         | `[]`                                                                       | no       |
+| manage_registry_scanning_configuration           | Determines whether the registry scanning configuration will be managed.                                                                    | `bool`         | `false`                                                                    | no       |
+| registry_scan_type                               | The scanning type to set for the registry. Can be either ENHANCED or BASIC.                                                                | `string`       | `"ENHANCED"`                                                               | no       |
+| registry_scan_rules                              | One or multiple blocks specifying scanning rules to determine which repository filters are used and at what frequency scanning will occur. | `list`         | `null`                                                                     | no       |
+| create_registry_replication_configuration        | Determines whether a registry replication configuration will be created.                                                                   | `bool`         | `false`                                                                    | no       |
+| registry_replication_rules                       | The replication rules for a replication configuration. A maximum of 10 are allowed.                                                        | `list`         | `null`                                                                     | no       |
+| tags                                             | A map of tags to assign to resources.                                                                                                      | `map`          | `{}`                                                                       | no       |
 
 
 
