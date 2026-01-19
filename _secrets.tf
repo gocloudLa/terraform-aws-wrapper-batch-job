@@ -16,7 +16,7 @@ locals {
 
 module "ssm_parameter" {
   source  = "terraform-aws-modules/ssm-parameter/aws"
-  version = "1.2.0"
+  version = "2.1.0"
 
   for_each = local.batch_job_secrets_create
 
