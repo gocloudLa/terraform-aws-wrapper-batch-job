@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.3](https://github.com/gocloudLa/terraform-aws-wrapper-batch-job/compare/v1.0.2...v1.0.3) (2025-11-25)
+
+
+### Bug Fixes
+
+* **deps:** bump terraform-aws-modules/ssm-parameter/aws from 1.1.2 to 1.2.0 in the all-terraform-dependencies group across 1 directory ([#7](https://github.com/gocloudLa/terraform-aws-wrapper-batch-job/issues/7)) ([9ea195d](https://github.com/gocloudLa/terraform-aws-wrapper-batch-job/commit/9ea195d0dc36fd0496277e92f4b0b7f90d2bc313))
+* **ssm:** add overwrite = true ([#9](https://github.com/gocloudLa/terraform-aws-wrapper-batch-job/issues/9)) ([1cd9185](https://github.com/gocloudLa/terraform-aws-wrapper-batch-job/commit/1cd9185b729d53a906b83e0daa2e5fedfbce13c2))
+
 ## [1.0.2](https://github.com/gocloudLa/terraform-aws-wrapper-batch-job/compare/v1.0.1...v1.0.2) (2025-10-12)
 
 
