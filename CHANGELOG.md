@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.4](https://github.com/gocloudLa/terraform-aws-wrapper-batch-job/compare/v1.0.3...v1.0.4) (2026-03-06)
+
+
+### Bug Fixes
+
+* **deps:** bump the all-terraform-dependencies group across 1 directory with 2 updates ([#11](https://github.com/gocloudLa/terraform-aws-wrapper-batch-job/issues/11)) ([ea07691](https://github.com/gocloudLa/terraform-aws-wrapper-batch-job/commit/ea076910ac63ad17eae42d582b8b35a4b228d42f))
+
 ## [1.0.3](https://github.com/gocloudLa/terraform-aws-wrapper-batch-job/compare/v1.0.2...v1.0.3) (2025-11-25)
 
 
