@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/gocloudLa/terraform-aws-wrapper-batch-job/compare/v1.0.4...v1.1.0) (2026-07-07)
+
+
+### Features
+
+* **storage:** add ephemeral_storage_size_in_gib support ([#14](https://github.com/gocloudLa/terraform-aws-wrapper-batch-job/issues/14)) ([7129f75](https://github.com/gocloudLa/terraform-aws-wrapper-batch-job/commit/7129f75e2a99a5ee960ff1c99a0d582014438979))
+
 ## [1.0.4](https://github.com/gocloudLa/terraform-aws-wrapper-batch-job/compare/v1.0.3...v1.0.4) (2026-03-06)
 
 
