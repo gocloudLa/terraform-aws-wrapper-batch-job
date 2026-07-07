@@ -11,6 +11,7 @@ module "batch_job" {
   image                                   = try(each.value.image, module.ecr[each.key].repository_url)
   log_configuration                       = local.log_configuration[each.key]
   memory                                  = try(each.value.memory, var.batch_job_defaults.memory, "2048")
+  ephemeral_storage_size_in_gib           = try(each.value.ephemeral_storage_size_in_gib, var.batch_job_defaults.ephemeral_storage_size_in_gib, null)
   mount_points                            = try(each.value.mount_points, var.batch_job_defaults.mount_points, [])
   vcpu                                    = try(each.value.vcpu, var.batch_job_defaults.vcpu, "1")
   readonly_root_filesystem                = try(each.value.readonly_root_filesystem, var.batch_job_parameters.readonly_root_filesystem, false)

@@ -35,6 +35,12 @@ variable "environment" {
   default = []
 }
 
+variable "ephemeral_storage_size_in_gib" {
+  description = "The total amount of ephemeral storage in GiB to allocate for the task (21-200). When null, AWS Fargate default applies"
+  type        = number
+  default     = null
+}
+
 variable "fargate_platform_configuration" {
   description = ""
   type        = map(string)
