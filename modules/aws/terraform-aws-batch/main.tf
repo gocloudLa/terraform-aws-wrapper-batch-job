@@ -7,6 +7,7 @@ resource "aws_batch_job_definition" "this" {
     command                      = var.command
     environment                  = var.environment
     executionRoleArn             = aws_iam_role.task_exec.arn
+    ephemeralStorage             = var.ephemeral_storage_size_in_gib != null ? { sizeInGiB = var.ephemeral_storage_size_in_gib } : null
     fargatePlatformConfiguration = var.fargate_platform_configuration
     image                        = var.image
     jobRoleArn                   = aws_iam_role.tasks.arn

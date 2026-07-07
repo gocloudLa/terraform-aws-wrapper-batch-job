@@ -262,6 +262,7 @@ input_table: |
   | log_configuration | Configuration for container log registration | `any` | `{}` | no |
   | memory | Amount of memory to be assigned to the container during execution | `string` | `"2048"` | no |
   | mount_points | List of mount points for volumes in the container | `list(any)` | `{}` | no |
+  | ephemeral_storage_size_in_gib | Total ephemeral storage in GiB for the Fargate task (21-200) | `number` | `null` | no |
   | vcpu | Number of vCPUs assigned to the container | `string` | `"1"` | no |
   | readonly_root_filesystem | Determines if the container's root file system should be read-only | `bool` | `false` | no |
   | fargate_platform_configuration | AWS Fargate platform configuration | `map(string)` | `{ platformVersion = "LATEST" }` | no |
